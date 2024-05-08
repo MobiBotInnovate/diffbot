@@ -13,6 +13,9 @@ def generate_launch_description():
     # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
 
     package_name = "diffbot"
+    gazebo_params_file = os.path.join(
+        get_package_share_directory(package_name), "config", "gazebo_params.yaml"
+    )
 
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -36,6 +39,9 @@ def generate_launch_description():
                 )
             ]
         ),
+        launch_arguments={
+            "extra_gazebo_args": "--ros-args --params-file " + gazebo_params_file
+        }.items(),
     )
 
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
