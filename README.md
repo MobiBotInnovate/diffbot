@@ -2,11 +2,12 @@
 
 Setting up workspace
 ```bash
-mkdir ~/ros2_ws && cd ros2_ws
+mkdir ~/ros2_ws && cd ~/ros2_ws
 mkdir src && cd src
 git clone https://github.com/MobiBotInnovate/diffbot.git
 cd ~/ros2_ws
 colcon build --symlink-install
+source install/setup.bash
 ```
 Running the progam
 ```bash
