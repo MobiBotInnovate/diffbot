@@ -18,7 +18,7 @@ ros2 launch diffbot rplidar.launch.py
 ```
 Start slam
 ```
-ros2 launch diffbot rplidar.launch.py
+ros2 launch diffbot online_async_launch.py
 ```
 Start rviz
 ```
