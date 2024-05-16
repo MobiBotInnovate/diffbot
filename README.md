@@ -1,4 +1,12 @@
 ## Robot Package Template
+### Install ros2 humble
+- Follow these instructions https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
+### Dependencies
+```bash
+sudo apt update
+sudo apt install ros-humble-ros2-control
+sudo apt install ros-humble-ros2-controller
+```
 
 Setting up workspace
 ```bash
