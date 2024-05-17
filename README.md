@@ -5,7 +5,7 @@
 ```bash
 sudo apt update
 sudo apt install ros-humble-ros2-control
-sudo apt install ros-humble-ros2-controller
+sudo apt install ros-humble-ros2-controllers
 ```
 
 Setting up workspace
