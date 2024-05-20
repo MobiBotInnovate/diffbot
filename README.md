@@ -21,7 +21,7 @@ Running the progam
 ```bash
 ros2 launch diffbot launch_sim.launch.py
 ```
-Start the lidar
+Start the lidar  if running the real robot
 ```
 ros2 launch diffbot rplidar.launch.py
 ```
@@ -29,7 +29,7 @@ Start slam
 ```
 ros2 launch diffbot online_async_launch.py
 ```
-Start rviz
+Start nav2
 ```
-rviz2 -d ~/ros2_ws/src/config/view_bot.rviz
+ros2 launch diffbot navigation_launch.py
 ```
