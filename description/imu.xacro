@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="imu_robot">
+  <material name="whites">
+      <color rgba="1 1 1 1" />
+  </material>
 
   <!-- IMU Sensor -->
   <link name="imu_link">
@@ -9,16 +12,14 @@
       <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0"/>
+      <origin xyz="0 0 0.045"/>
       <geometry>
         <box size="0.02 0.02 0.02"/>
       </geometry>
-      <material>
-        <color rgba="0.0 1.0 0.0 1.0"/>
-      </material>
+      <material name="whites"/>
     </visual>
     <collision>
-      <origin xyz="0 0 0"/>
+      <origin xyz="0 0 0.045"/>
       <geometry>
         <box size="0.02 0.02 0.02"/>
       </geometry>
@@ -28,7 +29,7 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
     <child link="imu_link"/>
-    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <origin xyz="0 0 0.045" rpy="0 0 0"/>
   </joint>
 
   <gazebo reference="imu_link">
