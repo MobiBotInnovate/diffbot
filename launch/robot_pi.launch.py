@@ -23,11 +23,11 @@ def generate_launch_description():
         package_share_directory, "launch", "rplidar.launch.py"
     )
 
-    # motor_serial_driver_file = os.path.abspath(os.path.join(package_share_directory, "launch", "motor_driver.launch")
+    # motor_serial_driver_file = os.path.abspath(os.path.join(package_share_directory, "launch", "motor_driver.launch"))
     # )
 
     rsp = IncludeLaunchDescription(PythonLaunchDescriptionSource(rsp_launch_file))
-    # mrd = IncludeLaunchDescription(PythonLaunchDescriptionSource(motor_serial_driver_file)
+    # mrd = IncludeLaunchDescription(PythonLaunchDescriptionSource(motor_serial_driver_file))
 
     robot_description = Command(
         ["ros2 param get --hide-type /robot_state_publisher robot_description"]
