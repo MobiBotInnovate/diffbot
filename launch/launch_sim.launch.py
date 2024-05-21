@@ -1,12 +1,11 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
-from launch_ros.actions import Node
-
 from launch import LaunchDescription
 from launch.actions import (IncludeLaunchDescription, SetEnvironmentVariable,
                             TimerAction)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -20,7 +19,7 @@ def generate_launch_description():
         os.path.join(package_share_directory, "config", "nav2_default_view.rviz")
     )
     world_file = os.path.abspath(
-        os.path.join(package_share_directory, "worlds", "maze.world")
+        os.path.join(package_share_directory, "worlds", "turtlebot3_world.world")
     )
     rsp_launch_file = os.path.abspath(
         os.path.join(package_share_directory, "launch", "rsp.launch.py")
@@ -73,6 +72,7 @@ def generate_launch_description():
         launch_arguments={
             "world": world_file,
             "extra_gazebo_args": "--ros-args --params-file " + gazebo_params_file,
+            "verbose": "false",
         }.items(),
     )
 

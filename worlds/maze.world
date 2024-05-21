@@ -104,16 +104,6 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='ros_symbol'>
-        <pose>2.53761 -0.010437 0 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='symbol'>
-          <pose>2.53761 -0.010437 0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
       <light name='sun'>
         <pose>0 0 10 0 -0 0</pose>
       </light>
