@@ -1,11 +1,12 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
+from launch_ros.actions import Node
+
 from launch import LaunchDescription
 from launch.actions import (IncludeLaunchDescription, SetEnvironmentVariable,
                             TimerAction)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -114,14 +115,6 @@ def generate_launch_description():
         remappings=[("/cmd_vel_out", "/diff_cont/cmd_vel_unstamped")],
     )
 
-    online_async = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(online_async_launch_file)
-    )
-
-    navigation = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(navigation_launch_file),
-    )
-
     return LaunchDescription(
         [
             SetEnvironmentVariable("RCUTILS_LOGGING_BUFFERED_STREAM", "1"),
@@ -131,10 +124,7 @@ def generate_launch_description():
             diff_drive_spawner,
             joint_broad_spawner,
             twix_mux,
-            # online_async,
             rviz,
-            # Uncomment this if you want to include the navigation launch file
-            # navigation,
         ]
     )
 
