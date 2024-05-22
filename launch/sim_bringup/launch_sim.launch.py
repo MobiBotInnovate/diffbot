@@ -1,10 +1,13 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+
+from launch import LaunchDescription
 
 
 def generate_launch_description():
@@ -27,9 +30,15 @@ def generate_launch_description():
         os.path.join(package_share_directory, "config", "twist_mux.yaml")
     )
 
+    use_sim_time = LaunchConfiguration("use_sim_time", default="true")
+    use_ros2_control = LaunchConfiguration("use_ros2_control", default="true")
+
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(rsp_launch_file),
-        launch_arguments={"use_sim_time": "true", "use_ros2_control": "true"}.items(),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "use_ros2_control": use_ros2_control,
+        }.items(),
     )
 
     gazebo = IncludeLaunchDescription(
@@ -67,10 +76,18 @@ def generate_launch_description():
         output="screen",
     )
     diff_drive_spawner = Node(
-        package="controller_manager", executable="spawner", arguments=["diff_cont"]
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_cont"],
+        condition=IfCondition(use_ros2_control),
+        output="screen",
     )
     joint_broad_spawner = Node(
-        package="controller_manager", executable="spawner", arguments=["joint_broad"]
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_broad"],
+        condition=IfCondition(use_ros2_control),
+        output="screen",
     )
     rviz = Node(
         package="rviz2",
@@ -89,6 +106,12 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
+            DeclareLaunchArgument(
+                "use_sim_time", default_value="true", description="Use simulation time"
+            ),
+            DeclareLaunchArgument(
+                "use_ros2_control", default_value="true", description="Use ROS2 control"
+            ),
             rsp,
             gazebo,
             spawn_entity,
