@@ -1,7 +1,6 @@
 controller_manager:
   ros__parameters:
     update_rate: 30
-    use_sim_time: True
 
     diff_cont:
       type: diff_drive_controller/DiffDriveController
@@ -18,5 +17,4 @@ diff_cont:
     wheel_separation: 0.2175
     wheel_radius: 0.035
     use_stamped_vel: False
-    # velocity_command_topic: "/cmd_vel"  # Ensure this matches the topic published by teleop_twist_keyboard
 

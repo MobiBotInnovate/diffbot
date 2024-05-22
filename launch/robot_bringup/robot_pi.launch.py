@@ -5,33 +5,25 @@ from launch_ros.actions import Node
 
 from launch import LaunchDescription
 from launch.actions import (IncludeLaunchDescription, RegisterEventHandler,
-                            TimerAction)
+                            TimerAction, DeclareLaunchArgument)
 from launch.event_handlers import OnProcessStart
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command
+from launch.substitutions import Command, LaunchConfiguration
 
 
 def generate_launch_description():
+    use_sim_time = LaunchConfiguration("use_sim_time")
     package_name = "diffbot"
     package_share_directory = get_package_share_directory(package_name)
 
-    rsp_launch_file = os.path.abspath(
-        os.path.join(package_share_directory, "launch", "rsp.launch.py")
+    # Node to publish the robot description from the parameter
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        parameters=[{'robot_description': Command(['xacro ', os.path.join(package_share_directory, 'description', 'robot.urdf.xacro')]), "use_sim_time": use_sim_time}],
     )
 
-    rplidar_launch_file = os.path.join(
-        package_share_directory, "launch", "rplidar.launch.py"
-    )
-
-    # motor_serial_driver_file = os.path.abspath(os.path.join(package_share_directory, "launch", "motor_driver.launch"))
-    # )
-
-    rsp = IncludeLaunchDescription(PythonLaunchDescriptionSource(rsp_launch_file))
-    # mrd = IncludeLaunchDescription(PythonLaunchDescriptionSource(motor_serial_driver_file))
-
-    robot_description = Command(
-        ["ros2 param get --hide-type /robot_state_publisher robot_description"]
-    )
     controller_params = os.path.join(
         get_package_share_directory("diffbot"), "config", "ros2_controller.yaml"
     )
@@ -39,9 +31,9 @@ def generate_launch_description():
     controller_manager = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[{"robot_description": robot_description}, controller_params],
+        parameters=[controller_params],
     )
-    delayed_controller_manager = TimerAction(period=3.0, actions=[controller_manager])
+    delayed_controller_manager = TimerAction(period=5.0, actions=[controller_manager])
 
     diff_drive_spawner = Node(
         package="controller_manager", executable="spawner", arguments=["diff_cont"]
@@ -65,17 +57,20 @@ def generate_launch_description():
         )
     )
 
-    rplidar = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(rplidar_launch_file),
-        launch_arguments={"use_sim_time": "false"}.items(),
-    )
-
     return LaunchDescription(
         [
-            rsp,
+            DeclareLaunchArgument(
+                "use_sim_time",
+                default_value="false",
+                description="use sim time if true",
+                ),
+            robot_state_publisher,
             delayed_controller_manager,
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,
-            rplidar,
         ]
     )
+ 
+if __name__ == "__main__":
+    ld = generate_launch_description()
+    print(ld)   

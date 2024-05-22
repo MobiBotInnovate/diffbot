@@ -23,37 +23,12 @@ def generate_launch_description():
         os.path.join(package_share_directory, "worlds", "turtlebot3_world.world")
     )
     rsp_launch_file = os.path.abspath(
-        os.path.join(package_share_directory, "launch", "rsp.launch.py")
-    )
-    online_async_launch_file = os.path.abspath(
-        os.path.join(package_share_directory, "launch", "online_async_launch.py")
-    )
-    navigation_launch_file = os.path.abspath(
-        os.path.join(package_share_directory, "launch", "navigation_launch.py")
+        os.path.join(package_share_directory, "launch/robot_bringup", "rsp.launch.py")
     )
     twist_mux_params_file = os.path.abspath(
         os.path.join(package_share_directory, "config", "twist_mux.yaml")
     )
 
-    # Print statements for debugging
-    print("Gazebo params file:", gazebo_params_file)
-    print("RViz params file:", rviz_params)
-    print("World file:", world_file)
-    print("RSP launch file:", rsp_launch_file)
-    print("Online async launch file:", online_async_launch_file)
-    print("Navigation launch file:", navigation_launch_file)
-
-    # Verify that the files exist
-    if not os.path.isfile(rsp_launch_file):
-        raise FileNotFoundError(f"RSP launch file not found: {rsp_launch_file}")
-    if not os.path.isfile(online_async_launch_file):
-        raise FileNotFoundError(
-            f"Online async launch file not found: {online_async_launch_file}"
-        )
-    if not os.path.isfile(navigation_launch_file):
-        raise FileNotFoundError(
-            f"Navigation launch file not found: {navigation_launch_file}"
-        )
 
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(rsp_launch_file),
@@ -117,7 +92,6 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            SetEnvironmentVariable("RCUTILS_LOGGING_BUFFERED_STREAM", "1"),
             rsp,
             gazebo,
             spawn_entity,
