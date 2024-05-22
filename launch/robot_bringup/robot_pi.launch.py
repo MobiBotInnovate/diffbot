@@ -49,7 +49,11 @@ def generate_launch_description():
     # delayed_controller_manager = TimerAction(period=3.0, actions=[controller_manager])
 
     diff_drive_spawner = Node(
-        package="controller_manager", executable="spawner", arguments=["diff_cont"]
+        package="controller_manager",
+        executable="spawner",
+        arguments=["diff_cont"],
+        parameters=[controller_params],
+        output="screen",
     )
 
     #    delayed_diff_drive_spawner = RegisterEventHandler(
@@ -60,7 +64,11 @@ def generate_launch_description():
     #    )
 
     joint_broad_spawner = Node(
-        package="controller_manager", executable="spawner", arguments=["joint_broad"]
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_broad"],
+        parameters=[controller_params],
+        output="screen",
     )
 
     #    delayed_joint_broad_spawner = RegisterEventHandler(
