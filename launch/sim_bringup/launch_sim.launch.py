@@ -29,7 +29,7 @@ def generate_launch_description():
 
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(rsp_launch_file),
-        launch_arguments={"use_sim_time": "true"}.items(),
+        launch_arguments={"use_sim_time": "true", "use_ros2_control": "true"}.items(),
     )
 
     gazebo = IncludeLaunchDescription(
