@@ -1,14 +1,13 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
 from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
                             RegisterEventHandler, TimerAction)
 from launch.event_handlers import OnProcessStart
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
-
-from launch import LaunchDescription
 
 
 def generate_launch_description():
@@ -29,13 +28,24 @@ def generate_launch_description():
         launch_arguments={"use_sim_time": "false", "use_ros2_control": "true"}.items(),
     )
     rplidar = IncludeLaunchDescription(
-            PythonLaunchDescription(
-                [
-                    os.path.join(get_package_share_directory(package_name),
-                        "launch/lidar_bringup",
-                        "rplidar.launch.py"
-                ]
+        PythonLaunchDescriptionSource(
+            [
+                os.path.join(
+                    get_package_share_directory(package_name),
+                    "launch/lidar_bringup",
+                    "rplidar.launch.py",
+                )
+            ]
+        )
+    )
+    mpu6050driver = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                get_package_share_directory("mpu6050driver"),
+                "launch",
+                "mpu6050driver_launch.py",
             )
+        )
     )
     twist_mux_params = os.path.join(
         get_package_share_directory(package_name), "config", "twist_mux.yaml"
@@ -86,7 +96,6 @@ def generate_launch_description():
         )
     )
 
-
     return LaunchDescription(
         [
             rsp,
@@ -97,6 +106,7 @@ def generate_launch_description():
             # joint_broad_spawner,
             twist_mux,
             rplidar,
+            mpu6050driver,
         ]
     )
 
