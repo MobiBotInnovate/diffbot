@@ -39,3 +39,7 @@ Start nav2
 ```
 ros2 launch diffbot navigation_launch.py
 ```
+To steer the robot you can either use the nav2 stack of with the keyboard using the following command
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=key_cmd_vel
+```
