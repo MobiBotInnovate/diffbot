@@ -28,6 +28,15 @@ def generate_launch_description():
         ),
         launch_arguments={"use_sim_time": "false", "use_ros2_control": "true"}.items(),
     )
+    rplidar = IncludeLaunchDescription(
+            PythonLaunchDescription(
+                [
+                    os.path.join(get_package_share_directory(package_name),
+                        "launch/lidar_bringup",
+                        "rplidar.launch.py"
+                ]
+            )
+    )
     twist_mux_params = os.path.join(
         get_package_share_directory(package_name), "config", "twist_mux.yaml"
     )
@@ -77,6 +86,7 @@ def generate_launch_description():
         )
     )
 
+
     return LaunchDescription(
         [
             rsp,
@@ -86,6 +96,7 @@ def generate_launch_description():
             # diff_drive_spawner,
             # joint_broad_spawner,
             twist_mux,
+            rplidar,
         ]
     )
 
