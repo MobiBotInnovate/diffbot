@@ -51,30 +51,32 @@ def generate_launch_description():
         package="controller_manager", executable="spawner", arguments=["diff_cont"]
     )
 
-    delayed_diff_drive_spawner = RegisterEventHandler(
-        event_handler=OnProcessStart(
-            target_action=controller_manager,
-            on_start=[diff_drive_spawner],
-        )
-    )
+#    delayed_diff_drive_spawner = RegisterEventHandler(
+#        event_handler=OnProcessStart(
+#            target_action=controller_manager,
+#            on_start=[diff_drive_spawner],
+#        )
+#    )
 
     joint_broad_spawner = Node(
         package="controller_manager", executable="spawner", arguments=["joint_broad"]
     )
 
-    delayed_joint_broad_spawner = RegisterEventHandler(
-        event_handler=OnProcessStart(
-            target_action=controller_manager,
-            on_start=[joint_broad_spawner],
-        )
-    )
+#    delayed_joint_broad_spawner = RegisterEventHandler(
+#        event_handler=OnProcessStart(
+#            target_action=controller_manager,
+#            on_start=[joint_broad_spawner],
+#        )
+#    )
 
     return LaunchDescription(
         [
             rsp,
             delayed_controller_manager,
-            delayed_diff_drive_spawner,
-            delayed_joint_broad_spawner,
+           # delayed_diff_drive_spawner,
+           # delayed_joint_broad_spawner,
+            diff_drive_spawner,
+            joint_broad_spawner,
             twist_mux,
         ]
     )
