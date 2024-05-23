@@ -23,23 +23,19 @@ cd ~/ros2_ws
 colcon build --symlink-install
 source install/setup.bash
 ```
-Running the progam
+Running the simulated robot
 ```bash
 ros2 launch diffbot launch_sim.launch.py
 ```
-Start the lidar  if running the real robot
+To run the real robot run the following command on the raspberry pi
+```bash
+ros2 launch diffbot robot_pi.launch.py
 ```
-ros2 launch diffbot rplidar.launch.py
+On the dev machine run the following command to start slam, nav2 and rviz2
+```bash
+ros2 launch diffbot robot_laptop.launch.py
 ```
-Start slam
-```
-ros2 launch diffbot online_async_launch.py
-```
-Start nav2
-```
-ros2 launch diffbot navigation_launch.py
-```
-To steer the robot you can either use the nav2 stack of with the keyboard using the following command
+To steer the robot you can either use the nav2 stack or with the keyboard using the following command
 ```bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=key_cmd_vel
 ```

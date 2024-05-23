@@ -1,12 +1,13 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchDescription
 from launch.actions import (IncludeLaunchDescription, RegisterEventHandler,
                             TimerAction)
 from launch.event_handlers import OnProcessStart
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
+
+from launch import LaunchDescription
 
 
 def generate_launch_description():
@@ -34,16 +35,12 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(slam_toolbox_file)
     )
 
-    # Include Nav2 launch file
-    nav2_toolbox = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(nav2_toolbox_file)
-    )
-    # Register event handler to start Nav2 after SLAM toolbox
-    delayed_nav2_toolbox = RegisterEventHandler(
-        event_handler=OnProcessStart(
-            target_action=slam_toolbox,
-            on_start=[TimerAction(period=5.0, actions=[nav2_toolbox])],
-        )
+    # Include Nav2 launch file with a delay
+    delayed_nav2_toolbox = TimerAction(
+        period=5.0,
+        actions=[
+            IncludeLaunchDescription(PythonLaunchDescriptionSource(nav2_toolbox_file))
+        ],
     )
     return LaunchDescription(
         [
