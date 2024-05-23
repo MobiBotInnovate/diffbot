@@ -31,6 +31,7 @@ Setting up workspace for simulation
 mkdir ~/ros2_ws && cd ~/ros2_ws
 mkdir src && cd src
 git clone https://github.com/MobiBotInnovate/diffbot.git
+git clone -b humble git@github.com:ros-controls/gazebo_ros2_control.git
 cd ~/ros2_ws
 colcon build --symlink-install
 source install/setup.bash
