@@ -17,6 +17,8 @@ sudo apt install ros-humble-joint-state-publisher
 sudo apt install ros-humble-slam-toolbox
 sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup
 sudo apt install ros-humble-rviz2
+sudo apt install ros-humble-teleop-twist-keyboard
+sudo apt install ros-humble-robot-localization
 ```
 Setting up workspace for simulation
 ```bash
@@ -67,4 +69,8 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:
 - Wheel separation 0.2175 (m)
 - Wheel radius 0.035 (m)
 
+### Slam params changed
+max_laser_range: 12.0 #for rastering images
+
+### Nav2 params changed
 
