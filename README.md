@@ -12,7 +12,7 @@ sudo apt install ros-humble-joint-state-broadcaster
 sudo apt install ros-humble-joint-state-publisher
 ```
 
-Install only on the dev machine 
+### Dev machine
 ```bash
 sudo apt install ros-humble-slam-toolbox
 sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup
@@ -28,7 +28,7 @@ cd ~/ros2_ws
 colcon build --symlink-install
 source install/setup.bash
 ```
-### Real robot
+### Raspberry PI
 Next ssh into the raspberry pi 
 ```bash
 mkdir ~/robot_ws && cd ~/robot_ws
