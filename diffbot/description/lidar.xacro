@@ -30,7 +30,6 @@
       <pose> 0 0 0 0 0 0 </pose>
       <visualize> true </visualize>
       <update_rate>10</update_rate>
-      <gz_frame_id>laser_frame</gz_frame_id>
       <lidar>
         <scan>
           <horizontal>
