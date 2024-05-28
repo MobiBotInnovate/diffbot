@@ -1,26 +1,33 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch import LaunchDescription
+from launch.actions import (AppendEnvironmentVariable, DeclareLaunchArgument,
+                            IncludeLaunchDescription)
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
-from launch import LaunchDescription
+set_env_vars_resources = (
+    AppendEnvironmentVariable(
+        "GZ_SIM_RESOURCE_PATH",
+        os.path.join(get_package_share_directory("diffbot"), "worlds"),
+    ),
+)
 
 
 def generate_launch_description():
     package_name = "diffbot"
     package_share_directory = get_package_share_directory(package_name)
-
+    ros_gz_sim = get_package_share_directory("ros_gz_sim")
     gazebo_params_file = os.path.abspath(
         os.path.join(package_share_directory, "config", "gazebo_params.yaml")
     )
     rviz_params = os.path.abspath(
         os.path.join(package_share_directory, "config", "nav2_default_view.rviz")
     )
-    world_file = os.path.abspath(
+    world = os.path.abspath(
         os.path.join(package_share_directory, "worlds", "turtlebot3_world.world")
     )
     rsp_launch_file = os.path.abspath(
@@ -28,6 +35,9 @@ def generate_launch_description():
     )
     twist_mux_params_file = os.path.abspath(
         os.path.join(package_share_directory, "config", "twist_mux.yaml")
+    )
+    robot_localization_file_path = os.path.join(
+        package_share_directory, "config", "ekf.yaml"
     )
 
     use_sim_time = LaunchConfiguration("use_sim_time", default="true")
@@ -41,30 +51,36 @@ def generate_launch_description():
         }.items(),
     )
 
-    gazebo = IncludeLaunchDescription(
+    gz_server = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.abspath(
                 os.path.join(
-                    get_package_share_directory("gazebo_ros"),
+                    ros_gz_sim,
                     "launch",
-                    "gazebo.launch.py",
+                    "gz_sim.launch.py",
                 )
             )
         ),
         launch_arguments={
-            "world": world_file,
-            "extra_gazebo_args": "--ros-args --params-file " + gazebo_params_file,
-            "verbose": "false",
+            "gz_args": ["-r -s -v4 ", world],
+            "on_exit_shutdown": "true",
+            # "verbose": "false",
         }.items(),
+    )
+    gzclient_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(ros_gz_sim, "launch", "gz_sim.launch.py")
+        ),
+        launch_arguments={"gz_args": "-g -v4 "}.items(),
     )
 
     spawn_entity = Node(
-        package="gazebo_ros",
-        executable="spawn_entity.py",
+        package="ros_gz_sim",
+        executable="create",
         arguments=[
             "-topic",
             "robot_description",
-            "-entity",
+            "-name",
             "diffbot",
             "-x",
             "-2.0",  # Set the x position here
@@ -103,7 +119,14 @@ def generate_launch_description():
         parameters=[twist_mux_params_file, {"use_sim_time": True}],
         remappings=[("/cmd_vel_out", "/diff_cont/cmd_vel_unstamped")],
     )
-
+    # Start robot localization using an Extended Kalman filter
+    start_robot_localization_cmd = Node(
+        package="robot_localization",
+        executable="ekf_node",
+        name="ekf_filter_node",
+        output="screen",
+        parameters=[robot_localization_file_path],
+    )
     return LaunchDescription(
         [
             DeclareLaunchArgument(
@@ -113,12 +136,14 @@ def generate_launch_description():
                 "use_ros2_control", default_value="true", description="Use ROS2 control"
             ),
             rsp,
-            gazebo,
+            gz_server,
+            gzclient_cmd,
             spawn_entity,
             diff_drive_spawner,
             joint_broad_spawner,
             twix_mux,
             rviz,
+            start_robot_localization_cmd,
         ]
     )
 

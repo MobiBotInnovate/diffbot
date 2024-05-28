@@ -47,6 +47,7 @@ def generate_launch_description():
         "bt_navigator",
         "waypoint_follower",
         "velocity_smoother",
+        # "amcl",
     ]
 
     # Map fully qualified names to relative ones so the node's namespace can be prepended.
@@ -215,6 +216,17 @@ def generate_launch_description():
                     {"node_names": lifecycle_nodes},
                 ],
             ),
+            # Node(
+            #     package="nav2_amcl",
+            #     executable="amcl",
+            #     name="amcl",
+            #     output="screen",
+            #     respawn=use_respawn,
+            #     respawn_delay=2.0,
+            #     parameters=[configured_params],
+            #     arguments=["--ros-args", "--log-level", log_level],
+            #     remappings=remappings,
+            # ),
         ],
     )
 
@@ -284,6 +296,13 @@ def generate_launch_description():
                     }
                 ],
             ),
+            # ComposableNode(
+            #     package="nav2_amcl",
+            #     plugin="nav2_amcl::AmclNode",
+            #     name="amcl",
+            #     parameters=[configured_params],
+            #     remappings=remappings,
+            # ),
         ],
     )
 
