@@ -21,6 +21,7 @@ def generate_launch_description():
     package_name = "diffbot"
     package_share_directory = get_package_share_directory(package_name)
     ros_gz_sim = get_package_share_directory("ros_gz_sim")
+
     gazebo_params_file = os.path.abspath(
         os.path.join(package_share_directory, "config", "gazebo_params.yaml")
     )
@@ -28,7 +29,7 @@ def generate_launch_description():
         os.path.join(package_share_directory, "config", "nav2_default_view.rviz")
     )
     world = os.path.abspath(
-        os.path.join(package_share_directory, "worlds", "turtlebot3_world.world")
+        os.path.join(package_share_directory, "worlds", "empty.sdf")
     )
     rsp_launch_file = os.path.abspath(
         os.path.join(package_share_directory, "launch/robot_bringup", "rsp.launch.py")
@@ -41,13 +42,11 @@ def generate_launch_description():
     )
 
     use_sim_time = LaunchConfiguration("use_sim_time", default="true")
-    use_ros2_control = LaunchConfiguration("use_ros2_control", default="true")
 
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(rsp_launch_file),
         launch_arguments={
             "use_sim_time": use_sim_time,
-            "use_ros2_control": use_ros2_control,
         }.items(),
     )
 
@@ -95,14 +94,12 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=["diff_cont"],
-        condition=IfCondition(use_ros2_control),
         output="screen",
     )
     joint_broad_spawner = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_broad"],
-        condition=IfCondition(use_ros2_control),
         output="screen",
     )
     rviz = Node(
@@ -131,9 +128,6 @@ def generate_launch_description():
         [
             DeclareLaunchArgument(
                 "use_sim_time", default_value="true", description="Use simulation time"
-            ),
-            DeclareLaunchArgument(
-                "use_ros2_control", default_value="true", description="Use ROS2 control"
             ),
             rsp,
             gz_server,

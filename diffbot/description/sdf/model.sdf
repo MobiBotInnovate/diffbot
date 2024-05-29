@@ -1,0 +1,433 @@
+<sdf version='1.7'>
+  <model name='diffbot'>
+    <pose>0.0 0.0 0.05 0.0 0.0 0.0</pose>
+      <link name="base_footprint"/>
+      <link name='base_link'>
+        <inertial>
+          <pose>-4.6e-05 0 0.022054 0 -0 0</pose>
+          <mass>0.299203</mass>
+          <inertia>
+            <ixx>0.00076472</ixx>
+            <ixy>1.63868e-22</ixy>
+            <ixz>-6.83932e-08</ixz>
+            <iyy>0.00076294</iyy>
+            <iyz>1.27039e-19</iyz>
+            <izz>0.00108203</izz>
+          </inertia>
+        </inertial>
+
+        <collision name='base_link_collision'>
+          <pose>0 0 0.0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/collision/base_link.STL</uri>
+            </mesh>
+          </geometry>
+        </collision>
+
+        <visual name='base_link_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/visual/base_link.STL</uri>
+            </mesh>
+          </geometry>
+          <material> <!-- Black material -->
+            <ambient>0 0 0 1</ambient>
+            <diffuse>0 0 0 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>0 0 0 1</emissive>
+          </material> <!-- End black material -->
+        </visual>
+      </link>
+
+      <link name="lidar_link">    
+        <inertial>
+          <pose>-0.0 0 0.02 0 0 0</pose>
+          <inertia>
+            ixx="3.351E-06"
+            ixy="2.2279E-22"
+            ixz="-3.5293E-23"
+            iyy="3.351E-06"
+            iyz="-1.1516E-37"
+            izz="5.0265E-06" />
+          </inertia>
+            <mass>0.02513</mass>
+        </inertial>
+        <collision name="lidar_sensor_collision">
+          <pose>0.00 0 0.056 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/collision/LidarLink.STL</uri>
+            </mesh>
+          </geometry>
+        </collision>
+
+        <visual name="lidar_sensor_visual">
+          <pose>0.0 0 0.056 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://diffbot/meshes/collision/LidarLink.STL</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <material> <!-- Red material -->
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+            <specular>1 0 0 1</specular>
+            <emissive>1 0 0 1</emissive>
+          </material> <!-- End red material -->
+
+        </visual>
+
+        <sensor name="hls_lfcd_lds" type="gpu_lidar">
+          <always_on>true</always_on>
+          <visualize>true</visualize>
+          <pose>-0.000 0 0.056 0 0 0</pose>
+          <update_rate>10</update_rate>
+          <topic>scan</topic>
+          <gz_frame_id>lidar_link</gz_frame_id>
+          <lidar>
+            <scan>
+              <horizontal>
+                <samples>360</samples>
+                <resolution>1.000000</resolution>
+                <min_angle>0.000000</min_angle>
+                <max_angle>6.280000</max_angle>
+              </horizontal>
+            </scan>
+            <range>
+              <min>0.300000</min>
+              <max>6.0</max>
+              <resolution>0.015000</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </lidar>
+        </sensor>
+      </link>
+
+      <link name="imu_link">
+        <sensor name="mobibot_imu" type="imu">
+          <always_on>true</always_on>
+          <update_rate>200</update_rate>
+          <topic>imu</topic>
+          <imu>
+            <angular_velocity>
+              <x>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>2e-4</stddev>
+                </noise>
+              </x>
+              <y>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>2e-4</stddev>
+                </noise>
+              </y>
+              <z>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>2e-4</stddev>
+                </noise>
+              </z>
+            </angular_velocity>
+            <linear_acceleration>
+              <x>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>1.7e-2</stddev>
+                </noise>
+              </x>
+              <y>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>1.7e-2</stddev>
+                </noise>
+              </y>
+              <z>
+                <noise type="gaussian">
+                  <mean>0.0</mean>
+                  <stddev>1.7e-2</stddev>
+                </noise>
+              </z>
+            </linear_acceleration>
+          </imu>
+        </sensor>
+      </link>
+      <joint name='back_caster_joint' type='revolute'>
+        <pose relative_to='base_link'>-0.09 0 -0.042868 0 -0 0</pose>
+        <parent>base_link</parent>
+        <child>BackCasterLink</child>
+        <axis>
+          <xyz>0 0 -1</xyz>
+          <limit>
+            <effort>10</effort>
+            <velocity>10</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <damping>0.0001</damping>
+            <friction>0.0001</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+
+      <link name='BackCasterLink'>
+        <pose relative_to='back_caster_joint'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 -0 0.017513 0 -0 0</pose>
+          <mass>0.015897</mass>
+          <inertia>
+            <ixx>3.8221e-06</ixx>
+            <ixy>2.1372e-39</ixy>
+            <ixz>-2.2251e-23</ixz>
+            <iyy>3.8221e-06</iyy>
+            <iyz>4.0851e-39</iyz>
+            <izz>7.7388e-07</izz>
+          </inertia>
+        </inertial>
+        <collision name='BackCasterLink_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/collision/BackCasterLink.STL</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='BackCasterLink_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/visual/BackCasterLink.STL</uri>
+            </mesh>
+          </geometry>
+          <material> <!-- White material -->
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>1 1 1 1</specular>
+            <emissive>1 1 1 1</emissive>
+          </material> <!-- End white material -->
+
+        </visual>
+      </link>
+      <joint name='front_caster_joint' type='revolute'>
+        <pose relative_to='base_link'>0.09 0 -0.042868 0 -0 0</pose>
+        <parent>base_link</parent>
+        <child>FrontCasterLink</child>
+        <axis>
+          <xyz>0 0 -1</xyz>
+          <limit>
+            <effort>10</effort>
+            <velocity>10</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <damping>0.0001</damping>
+            <friction>0.0001</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='FrontCasterLink'>
+        <pose relative_to='front_caster_joint'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 -0 0.017513 0 -0 0</pose>
+          <mass>0.015897</mass>
+          <inertia>
+            <ixx>3.8221e-06</ixx>
+            <ixy>2.1372e-39</ixy>
+            <ixz>-2.2251e-23</ixz>
+            <iyy>3.8221e-06</iyy>
+            <iyz>4.0851e-39</iyz>
+            <izz>7.7388e-07</izz>
+          </inertia>
+        </inertial>
+        <collision name='FrontCasterLink_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/collision/FrontCasterLink.STL</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='FrontCasterLink_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/visual/FrontCasterLink.STL</uri>
+            </mesh>
+          </geometry>
+          <material> <!-- White material -->
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>1 1 1 1</specular>
+            <emissive>1 1 1 1</emissive>
+          </material> <!-- End white material -->
+
+        </visual>
+      </link>
+      <joint name='left_wheel_joint' type='revolute'>
+        <pose relative_to='base_link'>0 0.1255 -0.02 1.5708 -0 0</pose>
+        <parent>base_link</parent>
+        <child>LeftWheelLink</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-3.14</lower>
+            <upper>3.14</upper>
+            <effort>10</effort>
+            <velocity>10</velocity>
+          </limit>
+          <dynamics>
+            <damping>1</damping>
+            <friction>1</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+
+      <link name='LeftWheelLink'>
+        <pose relative_to='left_wheel_joint'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 -0 0.007373 0 -0 0</pose>
+          <mass>0.16695</mass>
+          <inertia>
+            <ixx>6.7293e-05</ixx>
+            <ixy>-1.516e-09</ixy>
+            <ixz>1.2651e-12</ixz>
+            <iyy>6.7296e-05</iyy>
+            <iyz>-2.9475e-12</iyz>
+            <izz>0.00011321</izz>
+          </inertia>
+        </inertial>
+        <collision name='LeftWheelLink_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/collision/LeftWheelLink.STL</uri>
+            </mesh>
+          </geometry>
+        </collision>
+
+        <visual name='LeftWheelLink_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/visual/LeftWheelLink.STL</uri>
+            </mesh>
+          </geometry>
+          <material> <!-- White material -->
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>1 1 1 1</specular>
+            <emissive>1 1 1 1</emissive>
+          </material> <!-- End white material -->
+
+        </visual>
+      </link>
+      <joint name='right_wheel_joint' type='revolute'>
+        <pose relative_to='base_link'>0 -0.1255 -0.02 1.5708 -0 0</pose>
+        <parent>base_link</parent>
+        <child>RightWheelLink</child>
+        <axis>
+          <xyz>0 0 -1</xyz>
+          <limit>
+            <lower>-3.14</lower>
+            <upper>3.14</upper>
+            <effort>10</effort>
+            <velocity>10</velocity>
+          </limit>
+          <dynamics>
+            <damping>1</damping>
+            <friction>1</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+
+      <joint name="lidar_joint" type="fixed">
+        <parent>base_link</parent>
+        <child>lidar_link</child>
+        <pose>0.000 0 0.056 0 0 0</pose>
+        <axis>
+          <xyz>0 0 1</xyz>
+        </axis>
+      </joint>
+
+      <joint name="imu_joint" type="fixed">
+        <parent>base_link</parent>
+        <child>imu_link</child>
+        <pose>0.0 0 0.02 0 0 0</pose>
+        <axis>
+          <xyz>0 0 1</xyz>
+        </axis>
+      </joint>
+      
+      <joint name="base_joint" type="fixed">
+        <parent>base_footprint</parent>
+        <child>base_link</child>
+        <pose>0.0 0.0 0.010 0 0 0</pose>
+      </joint>
+
+      <link name='RightWheelLink'>
+        <pose relative_to='right_wheel_joint'>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 -0 -0.007373 0 -0 0</pose>
+          <mass>0.16695</mass>
+          <inertia>
+            <ixx>6.7293e-05</ixx>
+            <ixy>1.9509e-10</ixy>
+            <ixz>-5.1237e-14</ixz>
+            <iyy>6.7296e-05</iyy>
+            <iyz>3.2071e-12</iyz>
+            <izz>0.00011321</izz>
+          </inertia>
+        </inertial>
+        <collision name='RightWheelLink_collision'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/collision/RightWheelLink.STL</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='RightWheelLink_visual'>
+          <pose>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://diffbot/meshes/visual/RightWheelLink.STL</uri>
+            </mesh>
+          </geometry>
+          <material> <!-- White material -->
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>1 1 1 1</specular>
+            <emissive>1 1 1 1</emissive>
+          </material> <!-- End white material -->
+        </visual>
+      </link>
+    </model>
+</sdf>

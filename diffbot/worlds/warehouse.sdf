@@ -1,0 +1,774 @@
+<sdf version='1.9'>
+  <world name='world_demo'>
+    <model name='diffbot'>
+      <pose>0.0 0.0 0.05 0.0 0.0 0.0</pose>
+        <link name="base_footprint"/>
+        <link name='base_link'>
+          <inertial>
+            <pose>-4.6e-05 0 0.022054 0 -0 0</pose>
+            <mass>0.299203</mass>
+            <inertia>
+              <ixx>0.00076472</ixx>
+              <ixy>1.63868e-22</ixy>
+              <ixz>-6.83932e-08</ixz>
+              <iyy>0.00076294</iyy>
+              <iyz>1.27039e-19</iyz>
+              <izz>0.00108203</izz>
+            </inertia>
+          </inertial>
+
+          <collision name='base_link_collision'>
+            <pose>0 0 0.0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/collision/base_link.STL</uri>
+              </mesh>
+            </geometry>
+          </collision>
+
+          <visual name='base_link_visual'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/visual/base_link.STL</uri>
+              </mesh>
+            </geometry>
+            <material> <!-- Black material -->
+              <ambient>0 0 0 1</ambient>
+              <diffuse>0 0 0 1</diffuse>
+              <specular>0 0 0 1</specular>
+              <emissive>0 0 0 1</emissive>
+            </material> <!-- End black material -->
+          </visual>
+        </link>
+
+        <link name="base_scan">    
+          <inertial>
+            <pose>-0.0 0 0.02 0 0 0</pose>
+            <inertia>
+              ixx="3.351E-06"
+              ixy="2.2279E-22"
+              ixz="-3.5293E-23"
+              iyy="3.351E-06"
+              iyz="-1.1516E-37"
+              izz="5.0265E-06" />
+            </inertia>
+              <mass>0.02513</mass>
+          </inertial>
+          <collision name="lidar_sensor_collision">
+            <pose>0.00 0 0.056 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/collision/LidarLink.STL</uri>
+              </mesh>
+            </geometry>
+          </collision>
+
+          <visual name="lidar_sensor_visual">
+            <pose>0.0 0 0.056 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <uri>model://diffbot/meshes/collision/LidarLink.STL</uri>
+                <scale>1 1 1</scale>
+              </mesh>
+            </geometry>
+            <material> <!-- Red material -->
+              <ambient>1 0 0 1</ambient>
+              <diffuse>1 0 0 1</diffuse>
+              <specular>1 0 0 1</specular>
+              <emissive>1 0 0 1</emissive>
+            </material> <!-- End red material -->
+
+          </visual>
+
+          <sensor name="hls_lfcd_lds" type="gpu_lidar">
+            <always_on>true</always_on>
+            <visualize>true</visualize>
+            <pose>-0.000 0 0.056 0 0 0</pose>
+            <update_rate>10</update_rate>
+            <topic>scan</topic>
+            <gz_frame_id>base_scan</gz_frame_id>
+            <lidar>
+              <scan>
+                <horizontal>
+                  <samples>360</samples>
+                  <resolution>1.000000</resolution>
+                  <min_angle>0.000000</min_angle>
+                  <max_angle>6.280000</max_angle>
+                </horizontal>
+              </scan>
+              <range>
+                <min>0.300000</min>
+                <max>6.0</max>
+                <resolution>0.015000</resolution>
+              </range>
+              <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.01</stddev>
+              </noise>
+            </lidar>
+          </sensor>
+        </link>
+
+        <link name="imu_link">
+          <sensor name="mobibot_imu" type="imu">
+            <always_on>true</always_on>
+            <update_rate>200</update_rate>
+            <topic>imu</topic>
+            <imu>
+              <angular_velocity>
+                <x>
+                  <noise type="gaussian">
+                    <mean>0.0</mean>
+                    <stddev>2e-4</stddev>
+                  </noise>
+                </x>
+                <y>
+                  <noise type="gaussian">
+                    <mean>0.0</mean>
+                    <stddev>2e-4</stddev>
+                  </noise>
+                </y>
+                <z>
+                  <noise type="gaussian">
+                    <mean>0.0</mean>
+                    <stddev>2e-4</stddev>
+                  </noise>
+                </z>
+              </angular_velocity>
+              <linear_acceleration>
+                <x>
+                  <noise type="gaussian">
+                    <mean>0.0</mean>
+                    <stddev>1.7e-2</stddev>
+                  </noise>
+                </x>
+                <y>
+                  <noise type="gaussian">
+                    <mean>0.0</mean>
+                    <stddev>1.7e-2</stddev>
+                  </noise>
+                </y>
+                <z>
+                  <noise type="gaussian">
+                    <mean>0.0</mean>
+                    <stddev>1.7e-2</stddev>
+                  </noise>
+                </z>
+              </linear_acceleration>
+            </imu>
+          </sensor>
+        </link>
+        <joint name='back_caster_joint' type='revolute'>
+          <pose relative_to='base_link'>-0.09 0 -0.042868 0 -0 0</pose>
+          <parent>base_link</parent>
+          <child>BackCasterLink</child>
+          <axis>
+            <xyz>0 0 -1</xyz>
+            <limit>
+              <effort>10</effort>
+              <velocity>10</velocity>
+              <lower>-1e+16</lower>
+              <upper>1e+16</upper>
+            </limit>
+            <dynamics>
+              <damping>0.0001</damping>
+              <friction>0.0001</friction>
+              <spring_reference>0</spring_reference>
+              <spring_stiffness>0</spring_stiffness>
+            </dynamics>
+          </axis>
+        </joint>
+
+        <link name='BackCasterLink'>
+          <pose relative_to='back_caster_joint'>0 0 0 0 -0 0</pose>
+          <inertial>
+            <pose>0 -0 0.017513 0 -0 0</pose>
+            <mass>0.015897</mass>
+            <inertia>
+              <ixx>3.8221e-06</ixx>
+              <ixy>2.1372e-39</ixy>
+              <ixz>-2.2251e-23</ixz>
+              <iyy>3.8221e-06</iyy>
+              <iyz>4.0851e-39</iyz>
+              <izz>7.7388e-07</izz>
+            </inertia>
+          </inertial>
+          <collision name='BackCasterLink_collision'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/collision/BackCasterLink.STL</uri>
+              </mesh>
+            </geometry>
+          </collision>
+          <visual name='BackCasterLink_visual'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/visual/BackCasterLink.STL</uri>
+              </mesh>
+            </geometry>
+            <material> <!-- White material -->
+              <ambient>1 1 1 1</ambient>
+              <diffuse>1 1 1 1</diffuse>
+              <specular>1 1 1 1</specular>
+              <emissive>1 1 1 1</emissive>
+            </material> <!-- End white material -->
+
+          </visual>
+        </link>
+        <joint name='front_caster_joint' type='revolute'>
+          <pose relative_to='base_link'>0.09 0 -0.042868 0 -0 0</pose>
+          <parent>base_link</parent>
+          <child>FrontCasterLink</child>
+          <axis>
+            <xyz>0 0 -1</xyz>
+            <limit>
+              <effort>10</effort>
+              <velocity>10</velocity>
+              <lower>-1e+16</lower>
+              <upper>1e+16</upper>
+            </limit>
+            <dynamics>
+              <damping>0.0001</damping>
+              <friction>0.0001</friction>
+              <spring_reference>0</spring_reference>
+              <spring_stiffness>0</spring_stiffness>
+            </dynamics>
+          </axis>
+        </joint>
+        <link name='FrontCasterLink'>
+          <pose relative_to='front_caster_joint'>0 0 0 0 -0 0</pose>
+          <inertial>
+            <pose>0 -0 0.017513 0 -0 0</pose>
+            <mass>0.015897</mass>
+            <inertia>
+              <ixx>3.8221e-06</ixx>
+              <ixy>2.1372e-39</ixy>
+              <ixz>-2.2251e-23</ixz>
+              <iyy>3.8221e-06</iyy>
+              <iyz>4.0851e-39</iyz>
+              <izz>7.7388e-07</izz>
+            </inertia>
+          </inertial>
+          <collision name='FrontCasterLink_collision'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/collision/FrontCasterLink.STL</uri>
+              </mesh>
+            </geometry>
+          </collision>
+          <visual name='FrontCasterLink_visual'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/visual/FrontCasterLink.STL</uri>
+              </mesh>
+            </geometry>
+            <material> <!-- White material -->
+              <ambient>1 1 1 1</ambient>
+              <diffuse>1 1 1 1</diffuse>
+              <specular>1 1 1 1</specular>
+              <emissive>1 1 1 1</emissive>
+            </material> <!-- End white material -->
+
+          </visual>
+        </link>
+        <joint name='left_wheel_joint' type='revolute'>
+          <pose relative_to='base_link'>0 0.1255 -0.02 1.5708 -0 0</pose>
+          <parent>base_link</parent>
+          <child>LeftWheelLink</child>
+          <axis>
+            <xyz>0 0 1</xyz>
+            <limit>
+              <lower>-3.14</lower>
+              <upper>3.14</upper>
+              <effort>10</effort>
+              <velocity>10</velocity>
+            </limit>
+            <dynamics>
+              <damping>1</damping>
+              <friction>1</friction>
+              <spring_reference>0</spring_reference>
+              <spring_stiffness>0</spring_stiffness>
+            </dynamics>
+          </axis>
+        </joint>
+
+        <link name='LeftWheelLink'>
+          <pose relative_to='left_wheel_joint'>0 0 0 0 -0 0</pose>
+          <inertial>
+            <pose>0 -0 0.007373 0 -0 0</pose>
+            <mass>0.16695</mass>
+            <inertia>
+              <ixx>6.7293e-05</ixx>
+              <ixy>-1.516e-09</ixy>
+              <ixz>1.2651e-12</ixz>
+              <iyy>6.7296e-05</iyy>
+              <iyz>-2.9475e-12</iyz>
+              <izz>0.00011321</izz>
+            </inertia>
+          </inertial>
+          <collision name='LeftWheelLink_collision'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/collision/LeftWheelLink.STL</uri>
+              </mesh>
+            </geometry>
+          </collision>
+
+          <visual name='LeftWheelLink_visual'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/visual/LeftWheelLink.STL</uri>
+              </mesh>
+            </geometry>
+            <material> <!-- White material -->
+              <ambient>1 1 1 1</ambient>
+              <diffuse>1 1 1 1</diffuse>
+              <specular>1 1 1 1</specular>
+              <emissive>1 1 1 1</emissive>
+            </material> <!-- End white material -->
+
+          </visual>
+        </link>
+        <joint name='right_wheel_joint' type='revolute'>
+          <pose relative_to='base_link'>0 -0.1255 -0.02 1.5708 -0 0</pose>
+          <parent>base_link</parent>
+          <child>RightWheelLink</child>
+          <axis>
+            <xyz>0 0 -1</xyz>
+            <limit>
+              <lower>-3.14</lower>
+              <upper>3.14</upper>
+              <effort>10</effort>
+              <velocity>10</velocity>
+            </limit>
+            <dynamics>
+              <damping>1</damping>
+              <friction>1</friction>
+              <spring_reference>0</spring_reference>
+              <spring_stiffness>0</spring_stiffness>
+            </dynamics>
+          </axis>
+        </joint>
+
+        <joint name="lidar_joint" type="fixed">
+          <parent>base_link</parent>
+          <child>base_scan</child>
+          <pose>0.000 0 0.056 0 0 0</pose>
+          <axis>
+            <xyz>0 0 1</xyz>
+          </axis>
+        </joint>
+
+        <joint name="imu_joint" type="fixed">
+          <parent>base_link</parent>
+          <child>imu_link</child>
+          <pose>0.0 0 0.02 0 0 0</pose>
+          <axis>
+            <xyz>0 0 1</xyz>
+          </axis>
+        </joint>
+        
+        <joint name="base_joint" type="fixed">
+          <parent>base_footprint</parent>
+          <child>base_link</child>
+          <pose>0.0 0.0 0.010 0 0 0</pose>
+        </joint>
+
+        <link name='RightWheelLink'>
+          <pose relative_to='right_wheel_joint'>0 0 0 0 -0 0</pose>
+          <inertial>
+            <pose>0 -0 -0.007373 0 -0 0</pose>
+            <mass>0.16695</mass>
+            <inertia>
+              <ixx>6.7293e-05</ixx>
+              <ixy>1.9509e-10</ixy>
+              <ixz>-5.1237e-14</ixz>
+              <iyy>6.7296e-05</iyy>
+              <iyz>3.2071e-12</iyz>
+              <izz>0.00011321</izz>
+            </inertia>
+          </inertial>
+          <collision name='RightWheelLink_collision'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/collision/RightWheelLink.STL</uri>
+              </mesh>
+            </geometry>
+          </collision>
+          <visual name='RightWheelLink_visual'>
+            <pose>0 0 0 0 -0 0</pose>
+            <geometry>
+              <mesh>
+                <scale>1 1 1</scale>
+                <uri>model://diffbot/meshes/visual/RightWheelLink.STL</uri>
+              </mesh>
+            </geometry>
+            <material> <!-- White material -->
+              <ambient>1 1 1 1</ambient>
+              <diffuse>1 1 1 1</diffuse>
+              <specular>1 1 1 1</specular>
+              <emissive>1 1 1 1</emissive>
+            </material> <!-- End white material -->
+
+          </visual>
+        </link>
+        <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+          <!-- Remove <ros> tag. -->
+
+          <!-- wheels -->
+          <left_joint>left_wheel_joint</left_joint>
+          <right_joint>right_wheel_joint</right_joint>
+
+          <!-- kinematics -->
+          <wheel_separation>0.2175</wheel_separation>
+          <wheel_radius>0.035</wheel_radius> <!-- computed from <wheel_diameter> in the original plugin-->
+
+          <!-- limits -->
+          <max_linear_acceleration>0.033</max_linear_acceleration> <!-- computed from <max_linear_acceleration> in the original plugin-->
+
+          <topic>cmd_vel</topic> <!-- from <commant_topic> -->
+
+          <odom_topic>odom</odom_topic> <!-- from <odometry_topic> -->
+          <frame_id>odom</frame_id> <!-- from <odometry_frame> -->
+          <child_frame_id>base_footprint</child_frame_id> <!-- from <robot_base_frame> -->
+          <odom_publisher_frequency>100</odom_publisher_frequency> <!-- from <update_rate>-->
+
+          <tf_topic>/tf</tf_topic> <!-- Short topic name for tf output -->
+        </plugin>
+        <plugin filename="gz-sim-joint-state-publisher-system"
+          name="gz::sim::systems::JointStatePublisher">
+          <topic>joint_states</topic> <!--from <ros><remapping> -->
+          <joint_name>left_wheel_joint</joint_name>
+          <joint_name>right_wheel_joint</joint_name>
+        </plugin>
+      </model>
+    <gravity>0 0 -9.8</gravity>
+    <physics type='ode'>
+      <max_step_size>0.01</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <max_contacts>10</max_contacts>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <plugin name='ignition::gazebo::systems::Physics' filename='libignition-gazebo-physics-system.so'/>
+    <plugin name='ignition::gazebo::systems::UserCommands' filename='libignition-gazebo-user-commands-system.so'/>
+    <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='libignition-gazebo-scene-broadcaster-system.so'/>
+    <plugin name='ignition::gazebo::systems::Imu' filename='ignition-gazebo-imu-system'/>
+    <plugin name='ignition::gazebo::systems::Sensors' filename='ignition-gazebo-sensors-system'>
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <gui fullscreen='false'>
+      <plugin name='3D View' filename='GzScene3D'>
+        <ignition-gui>
+          <title>3D View</title>
+          <property type='bool' key='showTitleBar'>false</property>
+          <property type='string' key='state'>docked</property>
+        </ignition-gui>
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.4 0.4 0.4</ambient_light>
+        <background_color>0.8 0.8 0.8</background_color>
+        <camera_pose>0 2.0 2.23 0 0.4 -1.83</camera_pose>
+      </plugin>
+      <plugin name='World control' filename='WorldControl'>
+        <ignition-gui>
+          <title>World control</title>
+          <property type='bool' key='showTitleBar'>false</property>
+          <property type='bool' key='resizable'>false</property>
+          <property type='double' key='height'>72</property>
+          <property type='double' key='width'>121</property>
+          <property type='double' key='z'>1</property>
+          <property type='string' key='state'>floating</property>
+          <anchors target='3D View'>
+            <line own='left' target='left'/>
+            <line own='bottom' target='bottom'/>
+          </anchors>
+        </ignition-gui>
+        <play_pause>true</play_pause>
+        <step>true</step>
+        <start_paused>true</start_paused>
+      </plugin>
+      <plugin name='World stats' filename='WorldStats'>
+        <ignition-gui>
+          <title>World stats</title>
+          <property type='bool' key='showTitleBar'>false</property>
+          <property type='bool' key='resizable'>false</property>
+          <property type='double' key='height'>110</property>
+          <property type='double' key='width'>290</property>
+          <property type='double' key='z'>1</property>
+          <property type='string' key='state'>floating</property>
+          <anchors target='3D View'>
+            <line own='right' target='right'/>
+            <line own='bottom' target='bottom'/>
+          </anchors>
+        </ignition-gui>
+        <sim_time>true</sim_time>
+        <real_time>true</real_time>
+        <real_time_factor>true</real_time_factor>
+        <iterations>true</iterations>
+      </plugin>
+      <plugin name='Transform control' filename='TransformControl'>
+        <ignition-gui>
+          <property type='bool' key='showTitleBar'>false</property>
+          <property key='x' type='double'>0</property>
+          <property key='y' type='double'>0</property>
+          <property key='width' type='double'>250</property>
+          <property key='height' type='double'>50</property>
+          <property key='state' type='string'>floating</property>
+          <property key='cardBackground' type='string'>#666666</property>
+        </ignition-gui>
+      </plugin>
+      <plugin name='Shapes' filename='Shapes'>
+        <ignition-gui>
+          <property type='bool' key='showTitleBar'>false</property>
+          <property key='x' type='double'>250</property>
+          <property key='y' type='double'>0</property>
+          <property key='width' type='double'>150</property>
+          <property key='height' type='double'>50</property>
+          <property key='state' type='string'>floating</property>
+          <property key='cardBackground' type='string'>#666666</property>
+        </ignition-gui>
+      </plugin>
+      <plugin name='Screenshot' filename='Screenshot'>
+        <ignition-gui>
+          <property type='bool' key='showTitleBar'>false</property>
+          <property key='x' type='double'>400</property>
+          <property key='y' type='double'>0</property>
+          <property key='width' type='double'>50</property>
+          <property key='height' type='double'>50</property>
+          <property key='state' type='string'>floating</property>
+          <property key='cardBackground' type='string'>#666666</property>
+        </ignition-gui>
+      </plugin>
+      <plugin name='Component inspector' filename='ComponentInspector'>
+        <ignition-gui>
+          <property key='x' type='double'>0</property>
+          <property key='y' type='double'>0</property>
+          <property key='width' type='double'>400</property>
+          <property key='height' type='double'>375</property>
+          <property key='state' type='string'>docked_collapsed</property>
+        </ignition-gui>
+      </plugin>
+      <plugin name='Entity tree' filename='EntityTree'>
+        <ignition-gui>
+          <property key='x' type='double'>0</property>
+          <property key='y' type='double'>0</property>
+          <property key='width' type='double'>400</property>
+          <property key='height' type='double'>375</property>
+          <property key='state' type='string'>docked_collapsed</property>
+        </ignition-gui>
+      </plugin>
+      <plugin name='Teleop' filename='Teleop'>
+        <ignition-gui>
+          <property key='x' type='double'>0</property>
+          <property key='y' type='double'>0</property>
+          <property key='width' type='double'>400</property>
+          <property key='height' type='double'>900</property>
+          <property key='state' type='string'>docked</property>
+        </ignition-gui>
+        <topic>/cmd_vel</topic>
+      </plugin>
+    </gui>
+    <scene>
+      <ambient>1 1 1 1</ambient>
+      <background>0.3 0.7 0.9 1</background>
+      <shadows>false</shadows>
+      <grid>false</grid>
+    </scene>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <model name='ground_plane'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>1 1</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <pose>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <pose>0 0 0 0 -0 0</pose>
+      <self_collide>false</self_collide>
+    </model>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Warehouse</uri>
+      <name>warehouse</name>
+      <pose>0 0 -0.1 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/cart_model_2</uri>
+      <name>cart1</name>
+      <pose>-5.73 15 0.25 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf_big</uri>
+      <name>shelf_big_0</name>
+      <pose>-9.34177 -13.5598 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf</name>
+      <pose>-4.41528 -0.690987 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_0</name>
+      <pose>-4.41528 2.30697 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_1</name>
+      <pose>-4.41528 5.30708 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_2</name>
+      <pose>-4.41528 8.34352 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_3</name>
+      <pose>5.60144 8.34352 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_4</name>
+      <pose>5.60144 5.30708 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_5</name>
+      <pose>5.60144 -0.690987 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_6</name>
+      <pose>5.60144 2.30697 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/pallet_box_mobile</uri>
+      <name>pallet_box_mobile</name>
+      <pose>4.4161 14.6952 0.01 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/pallet_box_mobile</uri>
+      <name>pallet_box_mobile_0</name>
+      <pose>4.45415 13.6212 0.01 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/pallet_box_mobile</uri>
+      <name>pallet_box_mobile_1</name>
+      <pose>4.4468 12.229 0.01 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/pallet_box_mobile</uri>
+      <name>pallet_box</name>
+      <pose>-6.11913 13.7079 0.01 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf_big</uri>
+      <name>shelf_big_1</name>
+      <pose>13.9821 15.319 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf_big</uri>
+      <name>shelf_big_2</name>
+      <pose>6.19777 -12.9647 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf_big</uri>
+      <name>shelf_big_3</name>
+      <pose>0.594376 -12.9647 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf_big</uri>
+      <name>shelf_big_4</name>
+      <pose>-5.36284 -12.9647 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_7</name>
+      <pose>13.3818 -21.2416 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_8</name>
+      <pose>13.3818 -19.0028 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_9</name>
+      <pose>13.3818 -16.4478 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/shelf</uri>
+      <name>shelf_10</name>
+      <pose>13.3818 -14.1028 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/MovAi/models/pallet_box_mobile</uri>
+      <name>pallet_box_0</name>
+      <pose>14.0222 -24.335 0.01 0 -0 0</pose>
+    </include>
+    <light name='sun' type='directional'>
+      <pose>-5 -3 10 0 -0 0</pose>
+      <cast_shadows>false</cast_shadows>
+      <intensity>1</intensity>
+      <direction>0 0 -1</direction>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>1 1 1 1</specular>
+      <attenuation>
+        <range>10</range>
+        <linear>1</linear>
+        <constant>1</constant>
+        <quadratic>0</quadratic>
+      </attenuation>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+  </world>
+</sdf>

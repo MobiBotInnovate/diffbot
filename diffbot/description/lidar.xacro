@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+  <xacro:include filename="inertial_macros.xacro"/>
   <joint name="laser_joint" type="fixed">
-    <parent link="chassis"/>
+    <parent link="base_link"/>
     <child link="laser_frame" />
     <origin xyz="0 0 0.110" rpy="0 0 0"/>
 
@@ -11,7 +12,6 @@
         <geometry>
             <cylinder radius="0.035" length="0.05"/>
         </geometry>
-        <material name="red"/>
     </visual>
     <collision>
         <geometry>
