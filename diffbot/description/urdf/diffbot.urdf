@@ -97,13 +97,11 @@
   </link>
 
   <!-- Right wheel joint -->
-  <joint name="right_wheel_joint" type="revolute">
+  <joint name="right_wheel_joint" type="continuous">
     <origin rpy="1.5708 0 0" xyz="0 -0.1255 -0.02"/>
     <parent link="base_link"/>
     <child link="RightWheelLink"/>
     <axis xyz="0 0 -1"/>
-    <limit effort="10" lower="-3.14" upper="3.14" velocity="10"/>
-    <dynamics damping="1" friction="1"/>
   </joint>
 
   <!-- Front caster link -->
@@ -142,7 +140,7 @@
   </joint>
 
   <!-- Lidar link -->
-  <link name="LidarLink">
+  <link name="base_scan">
     
     <inertial>
       <origin rpy="0 0 0" xyz="2.0536E-18 -1.491E-20 0.02"/>
@@ -170,11 +168,10 @@
   </link>
 
   <!-- Lidar joint -->
-  <joint name="lidar_joint" type="fixed">
+  <joint name="scan_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0.056"/>
     <parent link="base_link"/>
-    <child link="LidarLink"/>
-    <axis xyz="0 0 0"/>
+    <child link="base_scan"/>
   </joint>
 
   <!-- Left wheel link -->
@@ -200,21 +197,22 @@
       </geometry>
     </collision>
   </link>
+
   <!-- left_wheel_joint -->
-  <joint name="left_wheel_joint" type="revolute">
+  <joint name="left_wheel_joint" type="continuous">
     <origin rpy="1.5708 0 0" xyz="0 0.1255 -0.02"/>
     <parent link="base_link"/>
     <child link="LeftWheelLink"/>
     <axis xyz="0 0 1"/>
-    <limit effort="10" lower="-3.14" upper="3.14" velocity="10"/>
-    <dynamics damping="1" friction="1"/>
   </joint>
 
   <!-- ros2_control -->
   <ros2_control name="DiffBotSystem" type="system">
+
     <hardware>
       <plugin>gz_ros2_control/GazeboSystem</plugin>
     </hardware>
+
     <joint name="left_wheel_joint">
       <command_interface name="velocity">
         <param name="min">-2</param>
@@ -223,6 +221,7 @@
       <state_interface name="velocity"/>
       <state_interface name="position"/>
     </joint>
+
     <joint name="right_wheel_joint">
       <command_interface name="velocity">
         <param name="min">-2</param>
@@ -231,7 +230,9 @@
       <state_interface name="velocity"/>
       <state_interface name="position"/>
     </joint>
+
   </ros2_control>
+
   <gazebo>
     <!-- Joint state publisher -->
     <plugin filename="libgz_ros2_control.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
@@ -240,16 +241,20 @@
       <parameters>/home/pontus/ros2_ws/install/diffbot/share/diffbot/config/ros2_controller.yaml</parameters>
     </plugin>
   </gazebo>
+
   <material name="whites">
     <color rgba="1 1 1 1"/>
   </material>
+
   <!-- IMU Sensor -->
   <link name="imu_link">
+
     <inertial>
       <mass value="0.01"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
     </inertial>
+
     <visual>
       <origin xyz="0 0 0.045"/>
       <geometry>
@@ -257,18 +262,23 @@
       </geometry>
       <material name="whites"/>
     </visual>
+
     <collision>
       <origin xyz="0 0 0.045"/>
       <geometry>
         <box size="0.02 0.02 0.02"/>
       </geometry>
     </collision>
+
   </link>
+
+  <!-- IMU joint -->
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
     <child link="imu_link"/>
     <origin rpy="0 0 0" xyz="0 0 0.045"/>
   </joint>
+
   <gazebo reference="imu_link">
     <gravity>true</gravity>
     <sensor name="imu_sensor" type="imu">
