@@ -1,4 +1,3 @@
-## Robot Package Template
 ### Install ros2 humble
 - Follow these instructions https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
 ### Dependencies
