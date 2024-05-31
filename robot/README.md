@@ -69,7 +69,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:
 - Wheel radius 0.035 (m)
 
 ### Slam params changed
-max_laser_range: 12.0 #for rastering images
+max_laser_range: 6.0 #for rastering images
 
 ### Nav2 params changed
 
