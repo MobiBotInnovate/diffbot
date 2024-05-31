@@ -24,7 +24,7 @@ Setting up workspace for simulation
 ```bash
 mkdir ~/ros2_ws && cd ~/ros2_ws
 mkdir src && cd src
-git clone https://github.com/MobiBotInnovate/diffbot.git
+git clone -b final https://github.com/MobiBotInnovate/diffbot.git
 git clone -b humble git@github.com:ros-controls/gazebo_ros2_control.git
 cd ~/ros2_ws
 colcon build --symlink-install
@@ -35,7 +35,7 @@ Next ssh into the raspberry pi
 ```bash
 mkdir ~/robot_ws && cd ~/robot_ws
 mkdir src && cd src
-git clone https://github.com/MobiBotInnovate/diffbot.git
+git clone -b final https://github.com/MobiBotInnovate/diffbot.git
 cd ~/robot_ws
 git clone -b humble git@github.com:Buzzology/diffdrive_arduino.git
 cd diffdrive_arduino/
